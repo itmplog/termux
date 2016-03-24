@@ -6,6 +6,7 @@
 build/
 *.apk
 *.so
+app/src/main/obj
 
 # Crashlytics configuations
 com_crashlytics_export_strings.xml

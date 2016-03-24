@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -34,6 +33,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -176,11 +176,18 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
 		OnKeyListener keyListener = new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                // Debug
+                Log.d("keyeventdebug", event.toString() + "##" + event.keyCodeToString(keyCode));
+
+                //过滤掉所有 按键按下； 所有按键按下(不松手) 不处理事件
 				if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
 
+                //如果当前终端会话不存在，返回 不处理
 				final TerminalSession currentSession = getCurrentTermSession();
 				if (currentSession == null) return false;
 
+                // 如果收到 Enter & 当前会话isNotRunning finishIfRunning()
 				if (keyCode == KeyEvent.KEYCODE_ENTER && !currentSession.isRunning()) {
 					// Return pressed with finished session - remove it.
 					currentSession.finishIfRunning();
@@ -207,6 +214,8 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
 
 				if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || unicodeChar == 'n'/* next */) {
 					int index = mTermService.getSessions().indexOf(currentSession);
+
+                    // 回到第0个
 					if (++index >= mTermService.getSessions().size()) index = 0;
 					switchToSession(mTermService.getSessions().get(index));
 				} else if (keyCode == KeyEvent.KEYCODE_DPAD_UP || unicodeChar == 'p' /* previous */) {
