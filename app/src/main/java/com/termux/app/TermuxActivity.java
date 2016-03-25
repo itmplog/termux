@@ -210,8 +210,10 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
 				}
 
 				// Get the unmodified code point:
+                // what MetaKey is pressed!!!! should be 1
 				int unicodeChar = event.getUnicodeChar(0);
 
+                // KeyEvent.KEYCODE_DPAD_DOWN 导航键 向下
 				if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || unicodeChar == 'n'/* next */) {
 					int index = mTermService.getSessions().indexOf(currentSession);
 
@@ -229,8 +231,9 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
 				} else if (unicodeChar == 'f'/* full screen */) {
 					toggleImmersive();
 				} else if (unicodeChar == 'k'/* keyboard */) {
+                    //input method manager
 					InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.RESULT_UNCHANGED_HIDDEN);
 				} else if (unicodeChar == 'm'/* menu */) {
 					mTerminalView.showContextMenu();
 				} else if (unicodeChar == 'r'/* rename */) {
